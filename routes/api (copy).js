@@ -82,7 +82,7 @@ module.exports = function (app) {
       conflictsArr.push('region')
 
     //if no conflicts(conflictsarr.len == 0) valid : true
-    if(conflictsArr.length == 0)
+    if(conflictsArr.length == 0 || checkRegionPlacement)
       return res.json({valid: "true"})
     else
       return res.json({ "valid": false, "conflict": conflictsArr })

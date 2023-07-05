@@ -4,7 +4,7 @@ class SudokuSolver {
   validate(puzzleString) {
   
   var PuzzleRgx = /[1-9]|\./g;
-  //console.log('_______VALIDATE________')
+  console.log('_______VALIDATE________')
   
   if(puzzleString != undefined){
     if(puzzleString.length != 81)
@@ -19,6 +19,11 @@ class SudokuSolver {
   
 
 
+  
+      
+    
+
+
   }
 
  makeBoard(puzzleString){
@@ -27,31 +32,33 @@ class SudokuSolver {
       for(let i=0; i < 81; i++){
         if(i % 9 === 0)
           boardrow += 1
-          board[boardrow].push(puzzleString[i])
+
+        board[boardrow].push(puzzleString[i])
       }
-   //console.log('_______BOARD________')
+   console.log('_______BOARD________')
     //console.log(board)
     return board;
   }
 
-  checkRowPlacement(board, row, column, value) {
-    //console.log({row,column})
-    //console.log('_______ROW________')
+  checkRowPlacement(puzzleString, row, column, value) {
+    console.log({row,column})
+    let board = this.makeBoard(puzzleString)
+    console.log('_______ROW________')
     for(let i = 0; i < 9; i++){
-      //console.log('checkRowPlacement',board[row][i])
+      console.log('checkRowPlacement',board[row][i])
       
       if(value == board[row][i]){
         return false
       }
     }
-    return true
   }
 
-  checkColPlacement(board, row, column, value) {
-    //console.log('_______COLUMN________')
-    //let board = this.makeBoard(puzzleString)
+  checkColPlacement(puzzleString, row, column, value) {
+    console.log('_______COLUMN________')
+    console.log(column)
+    let board = this.makeBoard(puzzleString)
     for(let i = 0; i < 9; i++){
-      //console.log('checkColPlacement',board[i][column])
+      console.log('checkColPlacement',board[i][column])
       
       if(value == board[i][column]){
         return false
@@ -60,16 +67,17 @@ class SudokuSolver {
     return true
   }
 
-  checkRegionPlacement(board, row, column, value) {
-  //console.log('_______CHECKREGIONPLACEMENT________')
+  checkRegionPlacement(puzzleString, row, column, value) {
+  console.log('_______CHECKREGIONPLACEMENT________')
     
+  let board = this.makeBoard(puzzleString)
   
 	let boxTopRow = parseInt(row / 3) * 3       // Returns index of top row of box (0, 3, or 6)
 	let boxLeftColumn = parseInt(column / 3) * 3   // Returns index of left column of box (0, 3 or 6)
 
-  if(board[row][column] == value)
-    return {"valid":true}
-      
+        if(board[row][column] == value){
+          return {"valid":true}
+        }
     
 	let k // Looks through rows
 	let l // Looks through columns
@@ -77,12 +85,13 @@ class SudokuSolver {
       for(l = boxLeftColumn; l < boxLeftColumn + 3; l++){
         if(board[k][l] == value){
           if(board[row][column] == value){
-            return {"valid":true}
+            return res.json({"valid":true})
           }
           return false
         }
       }
     }
+    return true
   }
 
 
@@ -105,11 +114,11 @@ class SudokuSolver {
 
     const checkIfValidPlace = (board, row, column, value) => {
       
-      
-      //console.log({board})
-      let checkColPlacement = this.checkColPlacement(board, row, column, value)
-      let checkRowPlacement = this.checkRowPlacement(board, row, column, value)
-      let checkRegionPlacement = this.checkRegionPlacement(board, row, column, value)
+      const puzzleString = board.join("")
+      console.log({puzzleString})
+      let checkColPlacement = this.checkColPlacement(puzzleString, row, column, value)
+      let checkRowPlacement = this.checkRowPlacement(puzzleString, row, column, value)
+      let checkRegionPlacement = this.checkRegionPlacement(puzzleString, row, column, value)
 
       
       let conflictsArr = []
@@ -123,7 +132,7 @@ class SudokuSolver {
       if(checkRegionPlacement === false)
         conflictsArr.push('region')
       
-      if(conflictsArr.length == 0 || checkRegionPlacement)
+      if(conflictsArr.length == 0 || checkRegionPlacement.valid)
         return true
       
       return false
@@ -131,9 +140,10 @@ class SudokuSolver {
 
     
     function recurse(emptySpaceIndex) {
-        if(emptySpaceIndex >= emptySpaces.length)
+        //end
+        if(emptySpaceIndex >= emptySpaces.length){
           return true
-        
+        }
         const {row,col} = emptySpaces[emptySpaceIndex];
 
         for(let i=0; i < numarr.length;i++){
@@ -147,11 +157,12 @@ class SudokuSolver {
             board[row][col] = EMPTY;
           }
         }
+      
     }
     
     recurse(0);
     
-    //console.log(board)
+    console.log(board)
     return board
     
   }
