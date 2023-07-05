@@ -82,8 +82,8 @@ module.exports = function (app) {
       conflictsArr.push('region')
 
     //if no conflicts(conflictsarr.len == 0) valid : true
-    if(conflictsArr.length == 0)
-      return res.json({valid: "true"})
+    if(conflictsArr.length == 0 || checkRegionPlacement)
+      return res.json({valid: true})
     else
       return res.json({ "valid": false, "conflict": conflictsArr })
     
@@ -114,7 +114,7 @@ module.exports = function (app) {
       if(board.includes("."))
         return res.json({ error: 'Puzzle cannot be solved' })
       else
-        return res.json({ solution:board })
+        return res.json({"solution":board})
       
       
     });

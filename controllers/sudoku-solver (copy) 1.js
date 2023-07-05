@@ -85,7 +85,25 @@ class SudokuSolver {
     }
   }
 
-checkIfValidPlace (board, row, column, value) {
+
+
+  
+  solve(puzzleString) {
+    let board = this.makeBoard(puzzleString)
+    const EMPTY = '.'
+    const numarr = ['1','2','3','4','5','6','7','8','9']
+
+    let emptySpaces = [];
+    
+    for(let i = 0; i<board.length; i++){
+      for(let j = 0; j<board.length; j++){
+        if(board[i][j] === EMPTY)
+          emptySpaces.push({row: i, col: j})
+        
+      }
+    }
+
+    const checkIfValidPlace = (board, row, column, value) => {
       
       
       //console.log({board})
@@ -109,28 +127,10 @@ checkIfValidPlace (board, row, column, value) {
         return true
       
       return false
-}
-
-  
-  solve(puzzleString) {
-    let board = this.makeBoard(puzzleString)
-    const EMPTY = '.'
-    const numarr = ['1','2','3','4','5','6','7','8','9']
-
-    let emptySpaces = [];
-    
-    for(let i = 0; i<board.length; i++){
-      for(let j = 0; j<board.length; j++){
-        if(board[i][j] === EMPTY)
-          emptySpaces.push({row: i, col: j})
-        
-      }
     }
 
-
-
     
-    const recurse = (emptySpaceIndex) => {
+    function recurse(emptySpaceIndex) {
         if(emptySpaceIndex >= emptySpaces.length)
           return true
         
@@ -138,7 +138,8 @@ checkIfValidPlace (board, row, column, value) {
 
         for(let i=0; i < numarr.length;i++){
           let num = numarr[i];
-          if(this.checkIfValidPlace(board, row, col, num) ){
+
+          if(checkIfValidPlace(board, row, col, num) ){
             board[row][col] = num
              if(recurse(emptySpaceIndex+1)){
                return true;
